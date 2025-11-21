@@ -1,5 +1,6 @@
 package com.mundoverde.ui.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mundoverde.sensors.rememberAccelerometer
 import com.mundoverde.ui.components.CropCard
 import com.mundoverde.ui.components.TaskItem
+import com.mundoverde.ui.navigation.Routes
 import com.mundoverde.utils.LifecycleLogger
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +40,7 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                 )
             )
         },
-                floatingActionButton = {
+        floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { onNavigate("add_crop") },
                 icon = {
@@ -58,7 +61,7 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Header Section con saludo contextual
+            // Header Section
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,9 +120,16 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                 )
             }
 
+            // --- Nueva sección: Lectura rápida del Acelerómetro en Home ---
+            AccelerometerHomeSection(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp)
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Active Crops Section
+            // Cultivos destacados
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -386,6 +396,71 @@ fun QuickStatCard(
                 text = label,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun AccelerometerHomeSection(modifier: Modifier = Modifier) {
+    val (data, available) = rememberAccelerometer()
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Acelerómetro (m/s²)",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            if (available) {
+                AxisBarHome("Eje X", data.x)
+                AxisBarHome("Eje Y", data.y)
+                AxisBarHome("Eje Z", data.z)
+                Text(
+                    text = "Magnitud: ${"%.2f".format(data.magnitude)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                Text(
+                    text = "Sensor de acelerómetro no disponible",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AxisBarHome(label: String, value: Float) {
+    val progress = (kotlin.math.abs(value) / 15f).coerceIn(0f, 1f)
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "$label: ${"%.2f".format(value)}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(10.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(4.dp))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(progress)
+                    .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(4.dp))
             )
         }
     }

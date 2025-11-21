@@ -49,4 +49,5 @@ object Routes {
     const val TASKS_CALENDAR = "tasks_calendar"
     const val PROFILE = "profile"
     const val SETTINGS = "settings"
+    const val SENSORS = "sensors"
 }
