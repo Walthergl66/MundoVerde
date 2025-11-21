@@ -17,16 +17,27 @@ fun AppNavGraph() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Routes.HOME) {
-        composable(Routes.HOME) { Home(onNavigate = { route -> navController.navigate(route) }) }
+        composable(Routes.HOME) {
+            Home(onNavigate = { route ->
+                when (route) {
+                    "back" -> {
+                        // Pop si hay historial; si no, seguimos en Home
+                        @Suppress("UNUSED_VARIABLE")
+                        val poppedAny = navController.popBackStack()
+                    }
+                    else -> navController.navigate(route)
+                }
+            })
+        }
         composable(Routes.ADD_CROP) { AddCrop(onNavigateBack = { navController.popBackStack() }) }
         composable("${Routes.CROP_DETAIL}/{cropId}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("cropId") ?: ""
             CropDetail(cropId = id, onNavigateBack = { navController.popBackStack() })
         }
-        composable(Routes.CROP_LIST) { CropList(onNavigate = { route -> navController.navigate(route) }) }
-        composable(Routes.TASKS_CALENDAR) { TasksCalendar() }
+        composable(Routes.CROP_LIST) { CropList(onNavigate = { route -> if (route == "back") navController.popBackStack() else navController.navigate(route) }) }
+        composable(Routes.TASKS_CALENDAR) { TasksCalendar(onNavigateBack = { navController.popBackStack() }) }
         composable(Routes.PROFILE) { Profile(onNavigateBack = { navController.popBackStack() }) }
-        composable(Routes.SETTINGS) { Settings() }
+        composable(Routes.SETTINGS) { Settings(onNavigateBack = { navController.popBackStack() }) }
     }
 }
 

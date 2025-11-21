@@ -2,6 +2,7 @@ package com.mundoverde.ui.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -13,10 +14,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mundoverde.ui.components.CropCard
 import com.mundoverde.ui.components.TaskItem
+import com.mundoverde.utils.LifecycleLogger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(onNavigate: (String) -> Unit = {}) {
+    LifecycleLogger(tag = "Home")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -28,8 +31,9 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondary, // 🔹 Color de fondo
-                    titleContentColor = MaterialTheme.colorScheme.onSecondary // 🔹 Color del texto
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         },
@@ -54,25 +58,72 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Header Section
-            Column(
+            // Header Section con saludo contextual
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp)
+                    .padding(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Text(
-                    text = "Bienvenido",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    Text(
+                        text = "🌅 ¡Buen día, Agricultor!",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Tu huerto está prosperando. Tienes 3 tareas pendientes hoy.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Estadísticas rápidas
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                QuickStatCard(
+                    emoji = "🌱",
+                    value = "6",
+                    label = "Cultivos",
+                    modifier = Modifier.weight(1f)
+                )
+                QuickStatCard(
+                    emoji = "✅",
+                    value = "12",
+                    label = "Completadas",
+                    modifier = Modifier.weight(1f)
+                )
+                QuickStatCard(
+                    emoji = "📅",
+                    value = "3",
+                    label = "Hoy",
+                    modifier = Modifier.weight(1f)
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Active Crops Section
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -80,34 +131,38 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "🌱 Cultivos Activos",
+                        text = "Cultivos Destacados",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Text(
-                        text = "1 de 5",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    TextButton(onClick = { onNavigate("crop_list") }) {
+                        Text("Ver todos")
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CropCard(
-                    name = "Tomate Cherry",
-                    progress = 0.45f,
+                    name = "🍅 Tomate Cherry",
+                    progress = 0.65f,
                     onClick = { onNavigate("crop_detail/1") }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Placeholder for additional crops
-                Text(
-                    text = "+4 cultivos más",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.align(Alignment.End)
+                CropCard(
+                    name = "🥬 Lechuga Romana",
+                    progress = 0.45f,
+                    onClick = { onNavigate("crop_detail/2") }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CropCard(
+                    name = "🍓 Fresas",
+                    progress = 0.82f,
+                    onClick = { onNavigate("crop_detail/3") }
                 )
             }
 
@@ -117,7 +172,7 @@ fun Home(onNavigate: (String) -> Unit = {}) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -125,16 +180,22 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "📋 Tareas de Hoy",
+                        text = "Tareas de Hoy",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Text(
-                        text = "3 pendientes",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = RoundedCornerShape(20.dp)
+                    ) {
+                        Text(
+                            text = "pendientes",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -142,29 +203,41 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        containerColor = MaterialTheme.colorScheme.surface
                     ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
                 ) {
                     Column(
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // TaskItem sin el parámetro isCompleted
                         TaskItem(
-                            title = "💧 Riego - Tomate Cherry",
-                            subtitle = "08:00 AM • Invernadero"
+                            title = "Riego matutino - Tomates",
+                            subtitle = "07:00 AM • Sector A - Invernadero",
+                            isCompleted = false
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                         TaskItem(
-                            title = "🌿 Fertilización - Lechuga",
-                            subtitle = "10:30 AM • Huerto exterior"
+                            title = "Fertilización orgánica - Lechugas",
+                            subtitle = "10:30 AM • Sector B - Huerto exterior",
+                            isCompleted = false
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                         TaskItem(
-                            title = "🐛 Control de plagas",
-                            subtitle = "04:00 PM • Todos los cultivos"
+                            title = "Inspección de plagas - Fresas",
+                            subtitle = "04:00 PM • Sector C - Túnel bajo",
+                            isCompleted = false
                         )
                     }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                TextButton(
+                    onClick = { onNavigate("tasks_calendar") },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text("Ver calendario completo →")
                 }
             }
 
@@ -174,23 +247,23 @@ fun Home(onNavigate: (String) -> Unit = {}) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "🚀 Navegación Rápida",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
+                    text = "Acceso Rápido",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     NavigationCard(
-                        title = "Todos los Cultivos",
-                        subtitle = "Ver lista completa",
+                        title = "Lista de Cultivos",
+                        subtitle = "6 activos",
                         emoji = "📚",
                         onClick = { onNavigate("crop_list") },
                         modifier = Modifier.weight(1f)
@@ -198,7 +271,7 @@ fun Home(onNavigate: (String) -> Unit = {}) {
 
                     NavigationCard(
                         title = "Calendario",
-                        subtitle = "Tareas programadas",
+                        subtitle = "Programación",
                         emoji = "📅",
                         onClick = { onNavigate("tasks_calendar") },
                         modifier = Modifier.weight(1f)
@@ -209,19 +282,19 @@ fun Home(onNavigate: (String) -> Unit = {}) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     NavigationCard(
-                        title = "Estadísticas",
-                        subtitle = "Ver progreso",
-                        emoji = "📊",
-                        onClick = { onNavigate("stats") },
+                        title = "Mi Perfil",
+                        subtitle = "Información",
+                        emoji = "👤",
+                        onClick = { onNavigate("profile") },
                         modifier = Modifier.weight(1f)
                     )
 
                     NavigationCard(
                         title = "Configuración",
-                        subtitle = "Ajustes de app",
+                        subtitle = "Ajustes",
                         emoji = "⚙️",
                         onClick = { onNavigate("settings") },
                         modifier = Modifier.weight(1f)
@@ -229,7 +302,7 @@ fun Home(onNavigate: (String) -> Unit = {}) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -273,6 +346,46 @@ fun NavigationCard(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun QuickStatCard(
+    emoji: String,
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = emoji,
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
             )
         }
     }

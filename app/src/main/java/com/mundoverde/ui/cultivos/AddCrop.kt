@@ -5,17 +5,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mundoverde.utils.LifecycleLogger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCrop(onNavigateBack: () -> Unit = {}) {
+    LifecycleLogger(tag = "AddCrop")
     var tipo by remember { mutableStateOf("") }
     var fecha by remember { mutableStateOf("") }
     var ubicacion by remember { mutableStateOf("") }
@@ -26,7 +27,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
             TopAppBar(
                 title = {
                     Text(
-                        "🌱 Nuevo Cultivo",
+                        "Nuevo Cultivo",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -34,15 +35,15 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver"
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -67,7 +68,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        "📝 Información del Cultivo",
+                        "Información del Cultivo",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -94,7 +95,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     // Tipo de Planta
                     Column {
                         Text(
-                            "🌿 Tipo de Planta",
+                            "Tipo de Planta",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -103,9 +104,6 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                             value = tipo,
                             onValueChange = { tipo = it },
                             placeholder = { Text("Ej: Tomate, Lechuga, Zanahoria...") },
-                            leadingIcon = {
-                                Text("🪴")
-                            },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
@@ -117,7 +115,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     // Fecha de Siembra
                     Column {
                         Text(
-                            "📅 Fecha de Siembra",
+                            "Fecha de Siembra",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -125,10 +123,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                         OutlinedTextField(
                             value = fecha,
                             onValueChange = { fecha = it },
-                            placeholder = { Text("Ej: 10 Nov 2024") },
-                            leadingIcon = {
-                                Text("📆")
-                            },
+                            placeholder = { Text("Ej: 10 Nov 2025") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
@@ -140,7 +135,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     // Ubicación
                     Column {
                         Text(
-                            "📍 Ubicación",
+                            "Ubicación",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -149,9 +144,6 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                             value = ubicacion,
                             onValueChange = { ubicacion = it },
                             placeholder = { Text("Ej: Huerto exterior, Invernadero, Balcón...") },
-                            leadingIcon = {
-                                Text("🏠")
-                            },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
@@ -163,7 +155,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     // Notas
                     Column {
                         Text(
-                            "📋 Notas y Observaciones",
+                            "Notas y Observaciones",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -172,9 +164,6 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                             value = notas,
                             onValueChange = { notas = it },
                             placeholder = { Text("Observaciones importantes, condiciones especiales, recordatorios...") },
-                            leadingIcon = {
-                                Text("✏️")
-                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(120.dp),
@@ -230,7 +219,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("❌ Cancelar")
+                    Text("Cancelar")
                 }
 
                 Button(
@@ -243,7 +232,7 @@ fun AddCrop(onNavigateBack: () -> Unit = {}) {
                     enabled = tipo.isNotEmpty() && fecha.isNotEmpty()
                 ) {
                     Text(
-                        "💾 Guardar Cultivo",
+                        "Guardar Cultivo",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold
                     )

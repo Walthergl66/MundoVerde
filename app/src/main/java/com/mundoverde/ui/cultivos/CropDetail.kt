@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,10 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mundoverde.utils.LifecycleLogger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
+    LifecycleLogger(tag = "CropDetail")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -33,15 +35,15 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver"
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -114,7 +116,7 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
 
                         // Progress Bar
                         LinearProgressIndicator(
-                            progress = 0.65f,
+                            progress = { 0.65f },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(12.dp)
@@ -132,12 +134,14 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
                             Text(
                                 "65% completado",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium
                             )
                             Text(
-                                "45 días restantes",
+                                "35 días restantes",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Medium
                             )
                         }
                     }
@@ -152,20 +156,20 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StatCard(
-                    title = "Salud",
+                    title = "Estado",
                     value = "Excelente",
                     emoji = "💚",
                     modifier = Modifier.weight(1f)
                 )
                 StatCard(
-                    title = "Días",
-                    value = "25",
+                    title = "Días Plantado",
+                    value = "65",
                     emoji = "📅",
                     modifier = Modifier.weight(1f)
                 )
                 StatCard(
-                    title = "Tareas",
-                    value = "3",
+                    title = "Tareas Hoy",
+                    value = "2",
                     emoji = "📋",
                     modifier = Modifier.weight(1f)
                 )
@@ -189,7 +193,7 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "📝 Historial de Cuidados",
+                            "Historial de Cuidados",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -250,7 +254,7 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "📅 Próximas Actividades",
+                            "Próximas Actividades",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -307,14 +311,14 @@ fun CropDetail(cropId: String, onNavigateBack: () -> Unit = {}) {
                     onClick = { /* Registrar cuidado */ },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("➕ Registrar Cuidado")
+                    Text("Registrar Cuidado")
                 }
 
                 Button(
                     onClick = { /* Agregar tarea */ },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("📋 Nueva Tarea")
+                    Text("Nueva Tarea")
                 }
             }
         }

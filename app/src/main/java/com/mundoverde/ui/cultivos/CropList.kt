@@ -16,17 +16,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mundoverde.ui.components.CropCard
+import com.mundoverde.utils.LifecycleLogger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CropList(onNavigate: (String) -> Unit = {}) {
+    LifecycleLogger(tag = "CropList")
+
     val crops = listOf(
         Crop("Tomate Cherry", "🍅", 0.65f),
         Crop("Lechuga Romana", "🥬", 0.45f),
-        Crop("Fresas", "🍓", 0.75f),
-        Crop("Zanahorias", "🥕", 0.30f),
-        Crop("Albahaca", "🌿", 0.85f),
-        Crop("Pimientos", "🫑", 0.50f)
+        Crop("Fresas", "🍓", 0.82f),
+        Crop("Zanahorias", "🥕", 0.38f),
+        Crop("Albahaca", "🌿", 0.55f),
+        Crop("Pimientos Rojos", "🫑", 0.70f)
     )
 
     val searchQuery = remember { mutableStateOf("") }
@@ -55,8 +58,9 @@ fun CropList(onNavigate: (String) -> Unit = {}) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -115,13 +119,13 @@ fun CropList(onNavigate: (String) -> Unit = {}) {
                     modifier = Modifier.weight(1f)
                 )
                 SummaryCard(
-                    title = "Activos",
-                    value = "${crops.size}",
+                    title = "En Crecimiento",
+                    value = "4",
                     emoji = "🌱",
                     modifier = Modifier.weight(1f)
                 )
                 SummaryCard(
-                    title = "Cosecha",
+                    title = "Por Cosechar",
                     value = "2",
                     emoji = "⏳",
                     modifier = Modifier.weight(1f)
@@ -168,7 +172,7 @@ fun CropList(onNavigate: (String) -> Unit = {}) {
                 ) {
                     item {
                         Text(
-                            "📋 Lista de Cultivos (${filteredCrops.size})",
+                            "Lista de Cultivos (${filteredCrops.size})",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(vertical = 8.dp)

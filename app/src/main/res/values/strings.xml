@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">MundoVerde</string>
+    <string name="app_name">Mundo Verde</string>
+
+    <!-- Home Screen -->
+    <string name="home_welcome">¡Buen día, Agricultor!</string>
+    <string name="home_subtitle">Tu huerto está prosperando</string>
+    <string name="home_crops_section">Cultivos Destacados</string>
+    <string name="home_tasks_section">Tareas de Hoy</string>
+    <string name="home_quick_access">Acceso Rápido</string>
+
+    <!-- Crops -->
+    <string name="crops_title">Mis Cultivos</string>
+    <string name="crop_detail_title">Detalle del Cultivo</string>
+    <string name="add_crop">Nuevo Cultivo</string>
+    <string name="crops_active">Cultivos Activos</string>
+
+    <!-- Tasks -->
+    <string name="tasks_pending">pendientes</string>
+    <string name="tasks_completed">completadas</string>
+    <string name="tasks_today">Hoy</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Mi Perfil</string>
+    <string name="profile_personal_info">Información Personal</string>
+    <string name="profile_save">Guardar Cambios</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Configuración</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_appearance">Apariencia</string>
+    <string name="settings_units">Unidades de Medida</string>
+
+    <!-- Common -->
+    <string name="back">Volver</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="view_all">Ver todos</string>
+    <string name="search">Buscar</string>
 </resources>
